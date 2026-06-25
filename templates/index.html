@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>House Price Prediction</title>
+  <style>
+    :root {
+      --ink: #172026;
+      --muted: #5f6b73;
+      --line: #d9e2e8;
+      --panel: #ffffff;
+      --bg: #f4f7f9;
+      --accent: #087f8c;
+      --accent-dark: #075c66;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+      padding: 22px 32px;
+    }
+    h1 { margin: 0 0 6px; font-size: 28px; }
+    p { color: var(--muted); line-height: 1.5; }
+    main {
+      display: grid;
+      grid-template-columns: minmax(280px, 1.2fr) minmax(280px, 0.8fr);
+      gap: 20px;
+      padding: 24px 32px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 11px;
+      font: inherit;
+      background: #fff;
+    }
+    button {
+      grid-column: 1 / -1;
+      border: 0;
+      border-radius: 6px;
+      padding: 12px 14px;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { background: var(--accent-dark); }
+    .metric {
+      border-left: 4px solid var(--accent);
+      padding: 12px 14px;
+      background: #eef8fa;
+      margin-bottom: 16px;
+    }
+    .metric strong { display: block; font-size: 30px; margin-top: 4px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px;
+      text-align: left;
+    }
+    ul { padding-left: 18px; }
+    @media (max-width: 800px) {
+      main { grid-template-columns: 1fr; padding: 16px; }
+      form { grid-template-columns: 1fr; }
+      header { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>House Price Prediction</h1>
+    <p>Giao diện HTML dùng model đã train để dự đoán <strong>SalePrice</strong> từ thông tin căn nhà.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Thông tin căn nhà</h2>
+      <form method="post">
+        <label>MSSubClass <input name="MSSubClass" type="number" value="{{ input_values.MSSubClass }}" required></label>
+        <label>MSZoning
+          <select name="MSZoning">
+            {% for option in ["RL", "RM", "FV", "RH", "C (all)"] %}
+            <option value="{{ option }}" {% if input_values.MSZoning == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>LotArea <input name="LotArea" type="number" value="{{ input_values.LotArea }}" required></label>
+        <label>OverallQual <input name="OverallQual" type="number" min="1" max="10" value="{{ input_values.OverallQual }}" required></label>
+        <label>OverallCond <input name="OverallCond" type="number" min="1" max="10" value="{{ input_values.OverallCond }}" required></label>
+        <label>YearBuilt <input name="YearBuilt" type="number" value="{{ input_values.YearBuilt }}" required></label>
+        <label>YearRemodAdd <input name="YearRemodAdd" type="number" value="{{ input_values.YearRemodAdd }}" required></label>
+        <label>GrLivArea <input name="GrLivArea" type="number" value="{{ input_values.GrLivArea }}" required></label>
+        <label>FullBath <input name="FullBath" type="number" value="{{ input_values.FullBath }}" required></label>
+        <label>BedroomAbvGr <input name="BedroomAbvGr" type="number" value="{{ input_values.BedroomAbvGr }}" required></label>
+        <label>KitchenAbvGr <input name="KitchenAbvGr" type="number" value="{{ input_values.KitchenAbvGr }}" required></label>
+        <label>GarageCars <input name="GarageCars" type="number" value="{{ input_values.GarageCars }}" required></label>
+        <label>GarageArea <input name="GarageArea" type="number" value="{{ input_values.GarageArea }}" required></label>
+        <label>Neighborhood <input name="Neighborhood" value="{{ input_values.Neighborhood }}" required></label>
+        <label>HouseStyle <input name="HouseStyle" value="{{ input_values.HouseStyle }}" required></label>
+        <label>SaleCondition <input name="SaleCondition" value="{{ input_values.SaleCondition }}" required></label>
+        <button type="submit">Dự đoán giá nhà</button>
+      </form>
+    </section>
+    <section>
+      <h2>Kết quả</h2>
+      {% if prediction is not none %}
+      <div class="metric">
+        Predicted SalePrice
+        <strong>${{ "{:,.0f}".format(prediction) }}</strong>
+      </div>
+      <h3>Giải thích nhanh</h3>
+      <ul>
+        {% for note in notes %}
+        <li>{{ note }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>Nhập thông tin và bấm dự đoán. Nếu chưa có model, hệ thống sẽ train bằng dữ liệu hiện có trước.</p>
+      {% endif %}
+      <h3>Model ranking</h3>
+      {% if ranking %}
+      <table>
+        <thead>
+          <tr><th>Model</th><th>RMSE</th><th>MAE</th><th>R2</th></tr>
+        </thead>
+        <tbody>
+          {% for row in ranking %}
+          <tr>
+            <td>{{ row.model }}</td>
+            <td>{{ "{:,.0f}".format(row.RMSE) }}</td>
+            <td>{{ "{:,.0f}".format(row.MAE) }}</td>
+            <td>{{ "{:.3f}".format(row.R2) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>Chưa có metrics. Chạy train trước để hiển thị bảng so sánh.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>
