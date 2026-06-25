@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+from sklearn.ensemble import ExtraTreesRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import Lasso, LinearRegression, Ridge
 from sklearn.model_selection import GridSearchCV, KFold, learning_curve, train_test_split
 from sklearn.pipeline import Pipeline
@@ -34,7 +34,7 @@ def build_models(preprocessor) -> dict[str, Pipeline]:
         "random_forest": Pipeline(
             [
                 ("preprocessor", preprocessor),
-                ("model", RandomForestRegressor(n_estimators=120, random_state=RANDOM_STATE, min_samples_leaf=1)),
+                ("model", RandomForestRegressor(n_estimators=80, random_state=RANDOM_STATE, min_samples_leaf=1)),
             ]
         ),
         "gradient_boosting": Pipeline(
@@ -43,33 +43,37 @@ def build_models(preprocessor) -> dict[str, Pipeline]:
                 ("model", GradientBoostingRegressor(random_state=RANDOM_STATE)),
             ]
         ),
+        "extra_trees": Pipeline(
+            [
+                ("preprocessor", preprocessor),
+                ("model", ExtraTreesRegressor(n_estimators=100, random_state=RANDOM_STATE, min_samples_leaf=1)),
+            ]
+        ),
+        "hist_gradient_boosting": Pipeline(
+            [
+                ("preprocessor", preprocessor),
+                ("model", HistGradientBoostingRegressor(random_state=RANDOM_STATE)),
+            ]
+        ),
     }
 
 
 def build_tuning_grids(preprocessor) -> dict[str, tuple[Pipeline, dict[str, list[object]]]]:
     return {
-        "ridge_tuned": (
-            Pipeline([("preprocessor", preprocessor), ("model", Ridge(random_state=RANDOM_STATE))]),
-            {"model__alpha": [0.1, 1.0, 10.0, 50.0, 100.0]},
-        ),
-        "lasso_tuned": (
-            Pipeline([("preprocessor", preprocessor), ("model", Lasso(max_iter=100000, tol=1e-3, random_state=RANDOM_STATE))]),
-            {"model__alpha": [0.1, 1.0, 10.0, 100.0, 300.0]},
-        ),
-        "random_forest_tuned": (
-            Pipeline([("preprocessor", preprocessor), ("model", RandomForestRegressor(random_state=RANDOM_STATE))]),
-            {
-                "model__n_estimators": [80, 160],
-                "model__max_depth": [None, 5, 10],
-                "model__min_samples_leaf": [1, 2],
-            },
-        ),
         "gradient_boosting_tuned": (
             Pipeline([("preprocessor", preprocessor), ("model", GradientBoostingRegressor(random_state=RANDOM_STATE))]),
             {
-                "model__n_estimators": [80, 150],
-                "model__learning_rate": [0.03, 0.08, 0.1],
-                "model__max_depth": [2, 3],
+                "model__n_estimators": [120],
+                "model__learning_rate": [0.08],
+                "model__max_depth": [3],
+            },
+        ),
+        "hist_gradient_boosting_tuned": (
+            Pipeline([("preprocessor", preprocessor), ("model", HistGradientBoostingRegressor(random_state=RANDOM_STATE))]),
+            {
+                "model__learning_rate": [0.08],
+                "model__max_iter": [120],
+                "model__max_leaf_nodes": [31],
             },
         ),
     }
@@ -81,22 +85,32 @@ def tune_models(preprocessor, X_train, y_train, cv_splits: int) -> dict[str, obj
     if cv_splits < 2:
         return {"models": tuned_models, "report": pd.DataFrame(tuning_rows)}
 
-    cv = KFold(n_splits=cv_splits, shuffle=True, random_state=RANDOM_STATE)
+    if len(X_train) > 5000:
+        X_tune = X_train.sample(5000, random_state=RANDOM_STATE)
+        y_tune = y_train.loc[X_tune.index]
+    else:
+        X_tune = X_train
+        y_tune = y_train
+
+    cv = KFold(n_splits=min(3, cv_splits), shuffle=True, random_state=RANDOM_STATE)
     for name, (pipeline, param_grid) in build_tuning_grids(preprocessor).items():
         search = GridSearchCV(
             pipeline,
             param_grid=param_grid,
             scoring="neg_root_mean_squared_error",
             cv=cv,
-            n_jobs=None,
+            n_jobs=-1,
         )
-        search.fit(X_train, y_train)
-        tuned_models[name] = search.best_estimator_
+        search.fit(X_tune, y_tune)
+        best_estimator = search.best_estimator_
+        best_estimator.fit(X_train, y_train)
+        tuned_models[name] = best_estimator
         tuning_rows.append(
             {
                 "model": name,
                 "best_cv_rmse": float(-search.best_score_),
                 "best_params": search.best_params_,
+                "tuning_rows": int(len(X_tune)),
             }
         )
 
@@ -180,11 +194,17 @@ def save_training_figures(
         plt.close()
 
     if best_model is not None and X_train is not None and y_train is not None and len(X_train) >= 8:
+        if len(X_train) > 8000:
+            X_curve = X_train.sample(8000, random_state=RANDOM_STATE)
+            y_curve = y_train.loc[X_curve.index]
+        else:
+            X_curve = X_train
+            y_curve = y_train
         cv_splits = min(3, len(X_train))
         train_sizes, train_scores, validation_scores = learning_curve(
             best_model,
-            X_train,
-            y_train,
+            X_curve,
+            y_curve,
             cv=cv_splits,
             scoring="neg_root_mean_squared_error",
             train_sizes=np.linspace(0.35, 1.0, 5),

@@ -16,7 +16,7 @@ def build_preprocessor(numeric_features: list[str], categorical_features: list[s
     categorical_pipeline = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
+            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False, max_categories=50)),
         ]
     )
 

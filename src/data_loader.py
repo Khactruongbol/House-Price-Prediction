@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from config import DEFAULT_RAW_DATASET, DERIVED_LABEL_COLUMNS, OPENML_RAW_DATASET, PROCESSED_DATASET, TARGET_COLUMN
+from config import DEFAULT_RAW_DATASET, DERIVED_LABEL_COLUMNS, PROCESSED_DATASET, TARGET_COLUMN
 
 
 def resolve_dataset_path(dataset_path: str | Path | None = None) -> Path:
@@ -21,18 +21,15 @@ def resolve_dataset_path(dataset_path: str | Path | None = None) -> Path:
     if DEFAULT_RAW_DATASET.exists():
         return DEFAULT_RAW_DATASET
 
-    if OPENML_RAW_DATASET.exists():
-        return OPENML_RAW_DATASET
-
     raise FileNotFoundError(
-        "No real dataset found. Run `python -m src.data_pipeline` first, "
-        "or place Kaggle train.csv at data/raw/train.csv."
+        "No Kaggle dataset found. Run `python -m src.data_pipeline` first, "
+        "or place Kaggle House Prices train.csv at data/raw/train.csv."
     )
 
 
 def load_dataset(dataset_path: str | Path | None = None) -> pd.DataFrame:
     path = resolve_dataset_path(dataset_path)
-    df = pd.read_csv(path)
+    df = pd.read_csv(path, low_memory=False)
     if TARGET_COLUMN not in df.columns:
         raise ValueError(f"Dataset must contain target column '{TARGET_COLUMN}'.")
     return df

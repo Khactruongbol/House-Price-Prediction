@@ -12,37 +12,30 @@ app = Flask(__name__)
 
 
 DEFAULT_INPUT = {
-    "MSSubClass": 60,
-    "MSZoning": "RL",
+    "DatasetSource": "king_county_house_sales",
+    "PriceUnit": "USD",
+    "LivingArea": 1710,
     "LotArea": 8450,
-    "OverallQual": 7,
-    "OverallCond": 5,
+    "Bedrooms": 3,
+    "Bathrooms": 2,
+    "QualityScore": 7,
+    "ConditionScore": 5,
     "YearBuilt": 2003,
     "YearRemodAdd": 2003,
-    "GrLivArea": 1710,
-    "FullBath": 2,
-    "BedroomAbvGr": 3,
-    "KitchenAbvGr": 1,
-    "GarageCars": 2,
-    "GarageArea": 548,
     "Neighborhood": "CollgCr",
-    "HouseStyle": "2Story",
+    "HouseType": "1Fam",
     "SaleCondition": "Normal",
 }
 
 NUMERIC_FIELDS = {
-    "MSSubClass",
+    "LivingArea",
     "LotArea",
-    "OverallQual",
-    "OverallCond",
+    "Bedrooms",
+    "Bathrooms",
+    "QualityScore",
+    "ConditionScore",
     "YearBuilt",
     "YearRemodAdd",
-    "GrLivArea",
-    "FullBath",
-    "BedroomAbvGr",
-    "KitchenAbvGr",
-    "GarageCars",
-    "GarageArea",
 }
 
 

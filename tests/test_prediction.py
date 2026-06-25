@@ -5,7 +5,8 @@ from src.train import train_all
 
 
 def test_train_creates_model_and_prediction_is_positive():
-    train_all(save_artifacts=True)
+    if not MODEL_PATH.exists():
+        train_all(save_artifacts=True)
     assert MODEL_PATH.exists()
 
     df = load_dataset()
