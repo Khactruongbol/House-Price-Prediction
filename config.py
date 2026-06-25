@@ -18,8 +18,9 @@ TEST_SIZE = 0.2
 
 KAGGLE_COMPETITION_URL = "https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques"
 DEFAULT_RAW_DATASET = RAW_DATA_DIR / "train.csv"
-OPENML_RAW_DATASET = RAW_DATA_DIR / "ames_house_prices_openml.csv"
-PROCESSED_DATASET = PROCESSED_DATA_DIR / "house_prices_clean_labeled.csv"
+KAGGLE_RAW_DIR = RAW_DATA_DIR / "kaggle_sources"
+PROCESSED_DATASET = PROCESSED_DATA_DIR / "kaggle_house_prices_clean_labeled.csv"
+EDGE_CASE_REPORT = METRICS_DIR / "edge_case_report.json"
 DATA_COLLECTION_REPORT = METRICS_DIR / "data_collection_report.json"
 DATA_QUALITY_REPORT = METRICS_DIR / "data_quality_report.json"
 LABEL_REPORT = LABELS_DIR / "price_segment_labels.csv"

@@ -1,33 +1,80 @@
 {
+  "collection": [
+    {
+      "source": "ames_housing",
+      "slug": "shashanknecrothapa/ames-housing-dataset",
+      "status": "downloaded",
+      "price_unit": "USD",
+      "raw_files": [
+        "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\ames_housing\\AmesHousing.csv"
+      ]
+    },
+    {
+      "source": "simple_housing_prices",
+      "slug": "yasserh/housing-prices-dataset",
+      "status": "downloaded",
+      "price_unit": "dataset_original_unit",
+      "raw_files": [
+        "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\simple_housing_prices\\Housing.csv"
+      ]
+    },
+    {
+      "source": "bengaluru_house_prices",
+      "slug": "amitabhajoy/bengaluru-house-price-data",
+      "status": "downloaded",
+      "price_unit": "lakh_INR",
+      "raw_files": [
+        "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\bengaluru_house_prices\\Bengaluru_House_Data.csv"
+      ]
+    },
+    {
+      "source": "king_county_house_sales",
+      "slug": "harlfoxem/housesalesprediction",
+      "status": "downloaded",
+      "price_unit": "USD",
+      "raw_files": [
+        "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\king_county_house_sales\\kc_house_data.csv"
+      ]
+    }
+  ],
   "shape_before_noise_filter": [
-    1460,
-    81
+    38408,
+    17
   ],
   "shape_after_noise_filter": [
-    1460,
-    77
+    37729,
+    15
   ],
-  "removed_duplicate_rows": 0,
+  "removed_duplicate_rows": 679,
   "removed_high_missing_columns": [
-    "Alley",
-    "PoolQC",
-    "Fence",
-    "MiscFeature"
+    "GarageCars",
+    "GarageArea"
   ],
   "removed_constant_columns": [],
-  "rows_before_label_filter": 1460,
-  "rows_after_label_filter": 1458,
+  "rows_before_label_filter": 37729,
+  "rows_after_label_filter": 37729,
   "removed_missing_or_invalid_labels": 0,
-  "removed_known_target_feature_outliers": 2,
-  "target_min": 34900.0,
-  "target_max": 755000.0,
-  "target_median": 163000.0,
-  "processed_path": "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\processed\\house_prices_clean_labeled.csv",
-  "rows_final": 1458,
-  "columns_final": 80,
+  "target_min": 8.0,
+  "target_max": 13300000.0,
+  "target_median": 279950.0,
+  "processed_path": "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\processed\\kaggle_house_prices_clean_labeled.csv",
+  "rows_final": 37729,
+  "columns_final": 18,
+  "rows_by_source": {
+    "king_county_house_sales": 21605,
+    "bengaluru_house_prices": 12652,
+    "ames_housing": 2927,
+    "simple_housing_prices": 545
+  },
   "label_columns_added": [
     "PriceSegment",
     "QualityLabel",
     "AreaSegment"
-  ]
+  ],
+  "edge_case_report_path": "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\reports\\metrics\\edge_case_report.json",
+  "prediction_return_shape": {
+    "PredictedSalePrice": "numeric prediction in the selected DatasetSource price unit",
+    "DatasetSource": "market/source context required for interpretation",
+    "PriceUnit": "USD, lakh_INR, or dataset_original_unit depending on source"
+  }
 }

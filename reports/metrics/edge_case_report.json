@@ -1,0 +1,49 @@
+{
+  "prediction_return_shape": {
+    "PredictedSalePrice": "numeric prediction in the selected DatasetSource price unit",
+    "DatasetSource": "market/source context required for interpretation",
+    "PriceUnit": "USD, lakh_INR, or dataset_original_unit depending on source"
+  },
+  "special_cases_checked": {
+    "missing_numeric_values": "handled by median imputation in preprocessing",
+    "missing_categorical_values": "handled by most-frequent imputation in preprocessing",
+    "unknown_categories_at_inference": "handled by OneHotEncoder(handle_unknown='ignore')",
+    "mixed_price_units": "DatasetSource and PriceUnit are explicit features/metadata; do not compare raw prices across markets without conversion",
+    "invalid_labels": "removed when SalePrice is missing, nonnumeric, or <= 0",
+    "impossible_area_or_rooms": "removed when living area <= 0 or bedrooms < 0"
+  },
+  "source_price_units": {
+    "ames_housing": "USD",
+    "bengaluru_house_prices": "lakh_INR",
+    "king_county_house_sales": "USD",
+    "simple_housing_prices": "dataset_original_unit"
+  },
+  "rows_by_source": {
+    "king_county_house_sales": 21605,
+    "bengaluru_house_prices": 12652,
+    "ames_housing": 2927,
+    "simple_housing_prices": 545
+  },
+  "price_range_by_source": {
+    "ames_housing": {
+      "min": 12789.0,
+      "median": 160000.0,
+      "max": 755000.0
+    },
+    "bengaluru_house_prices": {
+      "min": 8.0,
+      "median": 73.0,
+      "max": 3600.0
+    },
+    "king_county_house_sales": {
+      "min": 75000.0,
+      "median": 450000.0,
+      "max": 7700000.0
+    },
+    "simple_housing_prices": {
+      "min": 1750000.0,
+      "median": 4340000.0,
+      "max": 13300000.0
+    }
+  }
+}

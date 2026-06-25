@@ -1,8 +1,38 @@
-{
-  "source": "openml_house_prices",
-  "source_path": "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\ames_house_prices_openml.csv",
-  "rows_collected": 1460,
-  "columns_collected": 81,
-  "target_column": "SalePrice",
-  "sample_data_used": false
-}
+[
+  {
+    "source": "ames_housing",
+    "slug": "shashanknecrothapa/ames-housing-dataset",
+    "status": "downloaded",
+    "price_unit": "USD",
+    "raw_files": [
+      "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\ames_housing\\AmesHousing.csv"
+    ]
+  },
+  {
+    "source": "simple_housing_prices",
+    "slug": "yasserh/housing-prices-dataset",
+    "status": "downloaded",
+    "price_unit": "dataset_original_unit",
+    "raw_files": [
+      "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\simple_housing_prices\\Housing.csv"
+    ]
+  },
+  {
+    "source": "bengaluru_house_prices",
+    "slug": "amitabhajoy/bengaluru-house-price-data",
+    "status": "downloaded",
+    "price_unit": "lakh_INR",
+    "raw_files": [
+      "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\bengaluru_house_prices\\Bengaluru_House_Data.csv"
+    ]
+  },
+  {
+    "source": "king_county_house_sales",
+    "slug": "harlfoxem/housesalesprediction",
+    "status": "downloaded",
+    "price_unit": "USD",
+    "raw_files": [
+      "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\kaggle_sources\\king_county_house_sales\\kc_house_data.csv"
+    ]
+  }
+]

@@ -106,27 +106,24 @@
     <section>
       <h2>Thông tin căn nhà</h2>
       <form method="post">
-        <label>MSSubClass <input name="MSSubClass" type="number" value="{{ input_values.MSSubClass }}" required></label>
-        <label>MSZoning
-          <select name="MSZoning">
-            {% for option in ["RL", "RM", "FV", "RH", "C (all)"] %}
-            <option value="{{ option }}" {% if input_values.MSZoning == option %}selected{% endif %}>{{ option }}</option>
+        <label>DatasetSource
+          <select name="DatasetSource">
+            {% for option in ["king_county_house_sales", "ames_housing", "bengaluru_house_prices", "simple_housing_prices"] %}
+            <option value="{{ option }}" {% if input_values.DatasetSource == option %}selected{% endif %}>{{ option }}</option>
             {% endfor %}
           </select>
         </label>
+        <label>PriceUnit <input name="PriceUnit" value="{{ input_values.PriceUnit }}" required></label>
+        <label>LivingArea <input name="LivingArea" type="number" value="{{ input_values.LivingArea }}" required></label>
         <label>LotArea <input name="LotArea" type="number" value="{{ input_values.LotArea }}" required></label>
-        <label>OverallQual <input name="OverallQual" type="number" min="1" max="10" value="{{ input_values.OverallQual }}" required></label>
-        <label>OverallCond <input name="OverallCond" type="number" min="1" max="10" value="{{ input_values.OverallCond }}" required></label>
+        <label>Bedrooms <input name="Bedrooms" type="number" value="{{ input_values.Bedrooms }}" required></label>
+        <label>Bathrooms <input name="Bathrooms" type="number" value="{{ input_values.Bathrooms }}" required></label>
+        <label>QualityScore <input name="QualityScore" type="number" value="{{ input_values.QualityScore }}" required></label>
+        <label>ConditionScore <input name="ConditionScore" type="number" value="{{ input_values.ConditionScore }}" required></label>
         <label>YearBuilt <input name="YearBuilt" type="number" value="{{ input_values.YearBuilt }}" required></label>
         <label>YearRemodAdd <input name="YearRemodAdd" type="number" value="{{ input_values.YearRemodAdd }}" required></label>
-        <label>GrLivArea <input name="GrLivArea" type="number" value="{{ input_values.GrLivArea }}" required></label>
-        <label>FullBath <input name="FullBath" type="number" value="{{ input_values.FullBath }}" required></label>
-        <label>BedroomAbvGr <input name="BedroomAbvGr" type="number" value="{{ input_values.BedroomAbvGr }}" required></label>
-        <label>KitchenAbvGr <input name="KitchenAbvGr" type="number" value="{{ input_values.KitchenAbvGr }}" required></label>
-        <label>GarageCars <input name="GarageCars" type="number" value="{{ input_values.GarageCars }}" required></label>
-        <label>GarageArea <input name="GarageArea" type="number" value="{{ input_values.GarageArea }}" required></label>
         <label>Neighborhood <input name="Neighborhood" value="{{ input_values.Neighborhood }}" required></label>
-        <label>HouseStyle <input name="HouseStyle" value="{{ input_values.HouseStyle }}" required></label>
+        <label>HouseType <input name="HouseType" value="{{ input_values.HouseType }}" required></label>
         <label>SaleCondition <input name="SaleCondition" value="{{ input_values.SaleCondition }}" required></label>
         <button type="submit">Dự đoán giá nhà</button>
       </form>

@@ -14,10 +14,10 @@ Dataset tham khao hoac thay the:
 
 - Housing Prices Dataset: https://www.kaggle.com/datasets/yasserh/housing-prices-dataset
 - Ames Housing Dataset: https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset
-- Real Estate Price Prediction: https://www.kaggle.com/datasets/quantbruce/real-estate-price-prediction
 - Bengaluru House Price Data: https://www.kaggle.com/datasets/amitabhajoy/bengaluru-house-price-data
+- House Sales in King County, USA: https://www.kaggle.com/datasets/harlfoxem/housesalesprediction
 
-Sau khi tai dataset chinh, dat file `train.csv` vao `data/raw/train.csv`. Neu chua co Kaggle credential, chuong trinh thu thap real Ames Housing data tu OpenML. Workflow train chinh khong dung sample data.
+Workflow hien tai chi thu thap data tho tu Kaggle bang `kagglehub`. Khong dung OpenML va khong dung sample data.
 
 ## 3. Cau Truc Du An
 
@@ -55,7 +55,7 @@ House-Price-Prediction/
 
 ## 4. Workflow Tong The
 
-1. Data collection: lay dataset tu Kaggle hoac OpenML va luu vao `data/raw/`.
+1. Data collection: lay nhieu dataset tho tu Kaggle va luu vao `data/raw/kaggle_sources/`.
 2. Noise filtering: xoa duplicate rows, cot missing qua cao, cot hang so va outlier bat thuong.
 3. Label filtering: chi giu label `SalePrice` hop le, khong missing va lon hon 0.
 4. Data labeling: tao nhan phan tich `PriceSegment`, `QualityLabel`, `AreaSegment`.
@@ -63,8 +63,8 @@ House-Price-Prediction/
 6. EDA: ve histogram `SalePrice`, scatter `GrLivArea` vs `SalePrice`, heatmap tuong quan va nhan dien outlier.
 7. Feature engineering: tao them `HouseAgeAtRemodel`, `AreaPerBedroom`, `GarageAreaPerCar` neu cot nguon ton tai.
 8. Preprocessing: impute missing value, standardize numeric features, one-hot encode categorical features bang `ColumnTransformer`.
-9. Model training: train Linear Regression, Ridge, Lasso, Random Forest va Gradient Boosting bang data da loc.
-10. Hyperparameter tuning: dung cross-validation de tune Ridge, Lasso, Random Forest va Gradient Boosting.
+9. Model training: train Linear Regression, Ridge, Lasso, Random Forest, Extra Trees, Gradient Boosting va Hist Gradient Boosting bang data da loc.
+10. Hyperparameter tuning: dung cross-validation nhe de tune Gradient Boosting va Hist Gradient Boosting, sau do fit lai model tot nhat tren full train set.
 11. Optimization check: so sanh baseline va tuned models bang RMSE, MAE, R2; chon model co RMSE thap nhat.
 12. Model saving: luu pipeline tot nhat vao `models/house_price_pipeline.joblib`.
 13. Inference: nhap thong tin nha moi, ap dung dung pipeline da train va tra ve gia du doan.
@@ -108,6 +108,9 @@ Notebook da co cell Colab setup mau, chi can bo comment khi chay tren Colab.
 - `grlivarea_vs_saleprice.png`: scatter dien tich song va gia.
 - `saleprice_correlation_heatmap.png`: heatmap tuong quan voi gia.
 - `model_rmse_comparison.png`: so sanh RMSE cac model.
+- `kaggle_rows_by_source.png`: so dong sau loc theo tung nguon Kaggle.
+- `saleprice_by_kaggle_source.png`: phan phoi gia theo nguon Kaggle.
+- `living_area_vs_saleprice_by_source.png`: dien tich va gia theo nguon Kaggle.
 - `actual_vs_predicted_saleprice.png`: gia thuc te vs gia du doan.
 - `residual_distribution.png`: phan phoi sai so.
 - `residuals_vs_predicted.png`: residual theo gia du doan.
@@ -120,6 +123,7 @@ Notebook da co cell Colab setup mau, chi can bo comment khi chay tren Colab.
 - Pipeline train xong tao file model trong `models/`.
 - File metric xuat ra `reports/metrics/model_metrics.csv`.
 - File tuning xuat ra `reports/metrics/model_tuning_report.csv`.
+- File edge cases xuat ra `reports/metrics/edge_case_report.json`.
 - Cac hinh EDA/model xuat ra `reports/figures/`.
 - Ham prediction tra ve mot gia tri so duong.
 - HTML app co the chay bang `python app_html.py`.

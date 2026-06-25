@@ -19,21 +19,18 @@ with st.sidebar:
         st.success(f"Best model: {result['best_model_name']}")
 
 default_values = {
-    "MSSubClass": 60,
-    "MSZoning": "RL",
+    "DatasetSource": "king_county_house_sales",
+    "PriceUnit": "USD",
+    "LivingArea": 1710,
     "LotArea": 8450,
-    "OverallQual": 7,
-    "OverallCond": 5,
+    "Bedrooms": 3,
+    "Bathrooms": 2,
+    "QualityScore": 7,
+    "ConditionScore": 5,
     "YearBuilt": 2003,
     "YearRemodAdd": 2003,
-    "GrLivArea": 1710,
-    "FullBath": 2,
-    "BedroomAbvGr": 3,
-    "KitchenAbvGr": 1,
-    "GarageCars": 2,
-    "GarageArea": 548,
     "Neighborhood": "CollgCr",
-    "HouseStyle": "2Story",
+    "HouseType": "1Fam",
     "SaleCondition": "Normal",
 }
 
@@ -41,21 +38,18 @@ left, right = st.columns([1, 1])
 with left:
     st.subheader("Input")
     input_row = {
-        "MSSubClass": st.number_input("MSSubClass", min_value=20, max_value=190, value=default_values["MSSubClass"], step=5),
-        "MSZoning": st.selectbox("MSZoning", ["RL", "RM", "FV", "RH", "C (all)"], index=0),
+        "DatasetSource": st.selectbox("DatasetSource", ["king_county_house_sales", "ames_housing", "bengaluru_house_prices", "simple_housing_prices"], index=0),
+        "PriceUnit": st.text_input("PriceUnit", value=default_values["PriceUnit"]),
+        "LivingArea": st.number_input("LivingArea", min_value=100, max_value=20000, value=default_values["LivingArea"], step=50),
         "LotArea": st.number_input("LotArea", min_value=500, max_value=100000, value=default_values["LotArea"], step=100),
-        "OverallQual": st.slider("OverallQual", 1, 10, default_values["OverallQual"]),
-        "OverallCond": st.slider("OverallCond", 1, 10, default_values["OverallCond"]),
+        "Bedrooms": st.number_input("Bedrooms", min_value=0, max_value=20, value=default_values["Bedrooms"], step=1),
+        "Bathrooms": st.number_input("Bathrooms", min_value=0.0, max_value=10.0, value=float(default_values["Bathrooms"]), step=0.5),
+        "QualityScore": st.slider("QualityScore", 1, 13, default_values["QualityScore"]),
+        "ConditionScore": st.slider("ConditionScore", 1, 10, default_values["ConditionScore"]),
         "YearBuilt": st.number_input("YearBuilt", min_value=1870, max_value=2026, value=default_values["YearBuilt"], step=1),
         "YearRemodAdd": st.number_input("YearRemodAdd", min_value=1870, max_value=2026, value=default_values["YearRemodAdd"], step=1),
-        "GrLivArea": st.number_input("GrLivArea", min_value=300, max_value=10000, value=default_values["GrLivArea"], step=50),
-        "FullBath": st.number_input("FullBath", min_value=0, max_value=5, value=default_values["FullBath"], step=1),
-        "BedroomAbvGr": st.number_input("BedroomAbvGr", min_value=0, max_value=10, value=default_values["BedroomAbvGr"], step=1),
-        "KitchenAbvGr": st.number_input("KitchenAbvGr", min_value=0, max_value=4, value=default_values["KitchenAbvGr"], step=1),
-        "GarageCars": st.number_input("GarageCars", min_value=0, max_value=5, value=default_values["GarageCars"], step=1),
-        "GarageArea": st.number_input("GarageArea", min_value=0, max_value=2000, value=default_values["GarageArea"], step=20),
         "Neighborhood": st.text_input("Neighborhood", value=default_values["Neighborhood"]),
-        "HouseStyle": st.text_input("HouseStyle", value=default_values["HouseStyle"]),
+        "HouseType": st.text_input("HouseType", value=default_values["HouseType"]),
         "SaleCondition": st.text_input("SaleCondition", value=default_values["SaleCondition"]),
     }
 
