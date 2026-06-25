@@ -1,0 +1,9 @@
+{
+  "best_model": "gradient_boosting_tuned",
+  "rows": 1458,
+  "columns": 83,
+  "baseline_best_rmse": 22155.655799783588,
+  "best_rmse_after_tuning": 21653.460076621355,
+  "optimization_status": "optimized",
+  "note": "Use the full Kaggle train.csv for a reliable final optimum; sample data is only for workflow validation."
+}

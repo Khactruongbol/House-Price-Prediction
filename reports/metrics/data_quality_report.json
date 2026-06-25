@@ -1,0 +1,33 @@
+{
+  "shape_before_noise_filter": [
+    1460,
+    81
+  ],
+  "shape_after_noise_filter": [
+    1460,
+    77
+  ],
+  "removed_duplicate_rows": 0,
+  "removed_high_missing_columns": [
+    "Alley",
+    "PoolQC",
+    "Fence",
+    "MiscFeature"
+  ],
+  "removed_constant_columns": [],
+  "rows_before_label_filter": 1460,
+  "rows_after_label_filter": 1458,
+  "removed_missing_or_invalid_labels": 0,
+  "removed_known_target_feature_outliers": 2,
+  "target_min": 34900.0,
+  "target_max": 755000.0,
+  "target_median": 163000.0,
+  "processed_path": "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\processed\\house_prices_clean_labeled.csv",
+  "rows_final": 1458,
+  "columns_final": 80,
+  "label_columns_added": [
+    "PriceSegment",
+    "QualityLabel",
+    "AreaSegment"
+  ]
+}

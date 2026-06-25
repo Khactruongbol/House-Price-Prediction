@@ -1,0 +1,8 @@
+{
+  "source": "openml_house_prices",
+  "source_path": "C:\\Users\\User\\OneDrive - ut.edu.vn\\Documents\\Machine Learning - Tr\u01b0\u1eddng\\House-Price-Prediction\\data\\raw\\ames_house_prices_openml.csv",
+  "rows_collected": 1460,
+  "columns_collected": 81,
+  "target_column": "SalePrice",
+  "sample_data_used": false
+}
