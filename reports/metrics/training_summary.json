@@ -5,5 +5,16 @@
   "baseline_best_rmse": 225945.2661116438,
   "best_rmse_after_tuning": 223098.05092099577,
   "optimization_status": "optimized",
-  "note": "Use the full Kaggle train.csv for a reliable final optimum; sample data is only for workflow validation."
+  "model_fit_rows": {
+    "linear_regression": 30183,
+    "ridge": 30183,
+    "lasso": 30183,
+    "random_forest": 8000,
+    "gradient_boosting": 8000,
+    "extra_trees": 8000,
+    "hist_gradient_boosting": 30183,
+    "gradient_boosting_tuned": 30183,
+    "hist_gradient_boosting_tuned": 30183
+  },
+  "note": "All rows come from filtered Kaggle data. Slow comparison models can use representative filtered-data samples for local runtime; tuned final candidates use the full training split."
 }
