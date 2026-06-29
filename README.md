@@ -18,7 +18,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python -m src.train
-python app_html.py
+streamlit run app.py
 ```
 
 The main workflow collects raw data only from Kaggle using `kagglehub`. It does not use OpenML or sample data.
@@ -32,21 +32,33 @@ Open `notebooks/99_house_price_workflow.ipynb` in Google Colab, run the Colab se
 - `reports/metrics/model_tuning_report.csv`
 - EDA and model figures under `reports/figures/`
 
-## HTML Interface
+## Python UI - Streamlit
 
-The HTML UI uses Flask:
+The recommended local UI is Streamlit because it keeps the interface in Python, displays charts and metrics easily, and avoids most HTML/font issues:
+
+```powershell
+streamlit run app.py
+```
+
+Then open `http://localhost:8501`.
+
+The Streamlit UI includes:
+
+- `Predict`: input validation and price prediction
+- `Dataset`: processed Kaggle dataset preview
+- `Model Metrics`: model ranking and RMSE chart
+- `Figures`: generated EDA/model figures
+- `Edge Cases`: prediction return shape and special-case handling
+
+## HTML Interface Fallback
+
+The HTML fallback uses Flask:
 
 ```powershell
 python app_html.py
 ```
 
 Then open `http://127.0.0.1:5000`.
-
-The older Streamlit app is still available:
-
-```powershell
-streamlit run app.py
-```
 
 ## Main Workflow
 

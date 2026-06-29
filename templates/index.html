@@ -78,6 +78,13 @@
       background: #eef8fa;
       margin-bottom: 16px;
     }
+    .notice {
+      border-radius: 6px;
+      margin: 0 0 14px;
+      padding: 10px 12px;
+    }
+    .notice.error { background: #fff1f0; border: 1px solid #ffccc7; color: #8c1d18; }
+    .notice.warn { background: #fffbe6; border: 1px solid #ffe58f; color: #6b4f00; }
     .metric strong { display: block; font-size: 30px; margin-top: 4px; }
     table {
       width: 100%;
@@ -130,6 +137,26 @@
     </section>
     <section>
       <h2>Kết quả</h2>
+      {% if errors %}
+      <div class="notice error">
+        <strong>Không thể dự đoán</strong>
+        <ul>
+          {% for item in errors %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if warnings %}
+      <div class="notice warn">
+        <strong>Cảnh báo dữ liệu đầu vào</strong>
+        <ul>
+          {% for item in warnings %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
       {% if prediction is not none %}
       <div class="metric">
         Predicted SalePrice

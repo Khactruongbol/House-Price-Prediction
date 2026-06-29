@@ -21,6 +21,11 @@ from src.feature_engineering import add_house_features
 from src.preprocessing import build_preprocessor, infer_feature_types
 
 
+MAX_TUNING_ROWS = 5000
+MAX_SLOW_MODEL_ROWS = 8000
+MAX_LEARNING_CURVE_ROWS = 1200
+
+
 def build_models(preprocessor) -> dict[str, Pipeline]:
     return {
         "linear_regression": Pipeline([("preprocessor", preprocessor), ("model", LinearRegression())]),
@@ -34,19 +39,35 @@ def build_models(preprocessor) -> dict[str, Pipeline]:
         "random_forest": Pipeline(
             [
                 ("preprocessor", preprocessor),
-                ("model", RandomForestRegressor(n_estimators=80, random_state=RANDOM_STATE, min_samples_leaf=1)),
+                (
+                    "model",
+                    RandomForestRegressor(
+                        n_estimators=50,
+                        random_state=RANDOM_STATE,
+                        min_samples_leaf=1,
+                        n_jobs=-1,
+                    ),
+                ),
             ]
         ),
         "gradient_boosting": Pipeline(
             [
                 ("preprocessor", preprocessor),
-                ("model", GradientBoostingRegressor(random_state=RANDOM_STATE)),
+                ("model", GradientBoostingRegressor(n_estimators=80, random_state=RANDOM_STATE)),
             ]
         ),
         "extra_trees": Pipeline(
             [
                 ("preprocessor", preprocessor),
-                ("model", ExtraTreesRegressor(n_estimators=100, random_state=RANDOM_STATE, min_samples_leaf=1)),
+                (
+                    "model",
+                    ExtraTreesRegressor(
+                        n_estimators=60,
+                        random_state=RANDOM_STATE,
+                        min_samples_leaf=1,
+                        n_jobs=-1,
+                    ),
+                ),
             ]
         ),
         "hist_gradient_boosting": Pipeline(
@@ -85,8 +106,8 @@ def tune_models(preprocessor, X_train, y_train, cv_splits: int) -> dict[str, obj
     if cv_splits < 2:
         return {"models": tuned_models, "report": pd.DataFrame(tuning_rows)}
 
-    if len(X_train) > 5000:
-        X_tune = X_train.sample(5000, random_state=RANDOM_STATE)
+    if len(X_train) > MAX_TUNING_ROWS:
+        X_tune = X_train.sample(MAX_TUNING_ROWS, random_state=RANDOM_STATE)
         y_tune = y_train.loc[X_tune.index]
     else:
         X_tune = X_train
@@ -115,6 +136,14 @@ def tune_models(preprocessor, X_train, y_train, cv_splits: int) -> dict[str, obj
         )
 
     return {"models": tuned_models, "report": pd.DataFrame(tuning_rows)}
+
+
+def _fit_data_for_model(name: str, X_train: pd.DataFrame, y_train: pd.Series) -> tuple[pd.DataFrame, pd.Series]:
+    slow_models = {"random_forest", "gradient_boosting", "extra_trees"}
+    if name in slow_models and len(X_train) > MAX_SLOW_MODEL_ROWS:
+        sampled_X = X_train.sample(MAX_SLOW_MODEL_ROWS, random_state=RANDOM_STATE)
+        return sampled_X, y_train.loc[sampled_X.index]
+    return X_train, y_train
 
 
 def save_training_figures(
@@ -194,8 +223,8 @@ def save_training_figures(
         plt.close()
 
     if best_model is not None and X_train is not None and y_train is not None and len(X_train) >= 8:
-        if len(X_train) > 8000:
-            X_curve = X_train.sample(8000, random_state=RANDOM_STATE)
+        if len(X_train) > MAX_LEARNING_CURVE_ROWS:
+            X_curve = X_train.sample(MAX_LEARNING_CURVE_ROWS, random_state=RANDOM_STATE)
             y_curve = y_train.loc[X_curve.index]
         else:
             X_curve = X_train
@@ -207,7 +236,8 @@ def save_training_figures(
             y_curve,
             cv=cv_splits,
             scoring="neg_root_mean_squared_error",
-            train_sizes=np.linspace(0.35, 1.0, 5),
+            train_sizes=np.linspace(0.35, 1.0, 4),
+            n_jobs=-1,
         )
         train_rmse = -train_scores.mean(axis=1)
         validation_rmse = -validation_scores.mean(axis=1)
@@ -239,8 +269,11 @@ def train_all(dataset_path: str | Path | None = None, save_artifacts: bool = Tru
 
     metrics: dict[str, dict[str, float]] = {}
     fitted_models: dict[str, Pipeline] = {}
+    model_fit_rows: dict[str, int] = {}
     for name, model in models.items():
-        model.fit(X_train, y_train)
+        fit_X, fit_y = _fit_data_for_model(name, X_train, y_train)
+        model_fit_rows[name] = int(len(fit_X))
+        model.fit(fit_X, fit_y)
         predictions = model.predict(X_test)
         metrics[name] = regression_metrics(y_test, predictions)
         fitted_models[name] = model
@@ -249,6 +282,7 @@ def train_all(dataset_path: str | Path | None = None, save_artifacts: bool = Tru
     tuning_result = tune_models(preprocessor, X_train, y_train, cv_splits=cv_splits)
     tuning_report = tuning_result["report"]
     for name, model in tuning_result["models"].items():
+        model_fit_rows[name] = int(len(X_train))
         predictions = model.predict(X_test)
         metrics[name] = regression_metrics(y_test, predictions)
         fitted_models[name] = model
@@ -272,6 +306,7 @@ def train_all(dataset_path: str | Path | None = None, save_artifacts: bool = Tru
                 "numeric_features": numeric_features,
                 "categorical_features": categorical_features,
                 "metrics": metrics_df.to_dict(orient="records"),
+                "model_fit_rows": model_fit_rows,
             },
             MODEL_PATH,
         )
@@ -287,7 +322,8 @@ def train_all(dataset_path: str | Path | None = None, save_artifacts: bool = Tru
                     "baseline_best_rmse": baseline_best_rmse,
                     "best_rmse_after_tuning": best_rmse,
                     "optimization_status": optimization_status,
-                    "note": "Use the full Kaggle train.csv for a reliable final optimum; sample data is only for workflow validation.",
+                    "model_fit_rows": model_fit_rows,
+                    "note": "All rows come from filtered Kaggle data. Slow comparison models can use representative filtered-data samples for local runtime; tuned final candidates use the full training split.",
                 },
                 indent=2,
             ),
